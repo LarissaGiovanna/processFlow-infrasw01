@@ -80,3 +80,4 @@ processflow> append ordenar historico.txt //adiciona a saida de ordenar em histo
 ### diretorios de trabalho
 - comando `workdir` serve como uma junção do `mkdir` e do `cd` e altera o diretório utilizado pelas tarefas executadas posteriormente. Ex: `workdir pasta/` e `run tarefa1`, o comando run sera executado dentro da pasta. ???
 
+![EXEMPLO CODIGO FORK E WAIT EM C PAG118](image.png)
