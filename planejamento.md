@@ -17,21 +17,9 @@ RELATORIO -> .pdf
 
 pdf, tar e link github -> enviados no classroom
 
-# duvidas
-- as tarefas realmente serao executadas ou é so uma simulação? ex: na criação da tarefa `listar` e recebe `l/bin/ls -l`, quando chamar a tarefa `listar`, deve fazer a função do comando `ls` ou é so por fins demonstrativos?
-- "todas as tarefas devem ser iniciadas antes que o ProcessFlow espere pelo término do grupo." em paralelo
-- em redirecionamento (confirmar):
-```bash
-processflow> input ordenar nomes.txt //ordenar recebe como entrada oq esta em nomes.txt ???
-processflow> output ordenar resultado.txt //a saida de ordenar vai para resultado.txt ???
-```
-- explicação do workdir
-- "Algumas outras situações que, apesar de não serem erros, o ProcessFlow deve tratar de forma coerente" ?
-- em casos de erro: processos que terminam com codigo de saida diferente de zero -> mostrar o retorno ?
-
 # to do
-- [ ] pesquisar como faz aparecer esse prompt `processFlow>`
-- [ ] pesquisar melhor como se faz a leitura e tratamento de arquivos passados por parameto
+- [ x ] pesquisar como faz aparecer esse prompt `processFlow>` [OK]
+- [ x ] pesquisar melhor como se faz a leitura e tratamento de arquivos passados por parameto [OK]
 - [ ] ler o restante do cap 3 e ver sobre as system calls (wait, fork, exec, etc)
 
 # Como sera
@@ -40,7 +28,7 @@ processflow> output ordenar resultado.txt //a saida de ordenar vai para resultad
 
 ## modos diferentes
 ### interativo
-- deve executar e aparecer no terminal (processflow>) -> pesquisar como faz isso
+- deve executar e aparecer no terminal (processflow>) -> pesquisar como faz isso [OK]
 - usuario deve digitar os comandos 
 ```bash
 Sintaxe:
@@ -52,13 +40,13 @@ processflow> task listar /bin/ls -l
 - é necessario para criar uma nova tarefa
 
 ### workflow
-- recebe um arquivo .pf como argumento, contendo comandos para ser executados
-- é o modo interativo mas especifico para receber arquivos e trata-los
-- o prompt (processflow>) nao sera exibido
-- cada linha do arquivo lido devera ser printada na tela antes de ser executada
+- recebe um arquivo .pf como argumento, contendo comandos para ser executados [OK]
+- é o modo interativo mas especifico para receber arquivos e trata-los [OK]
+- o prompt (processflow>) nao sera exibido [OK]
+- cada linha do arquivo lido devera ser printada na tela antes de ser executada [OK]
 
 ## comandos
-- para ambos os modos, para sair, sera o comando `exit`
+- para ambos os modos, para sair, sera o comando `exit` [OK]
 - para executar as tarefas cadastradas, devera ser executada com `run <nome_tarefa>`
 
 ### modos execucao
@@ -117,14 +105,14 @@ processflow> append ordenar historico.txt //adiciona a saida de ordenar em histo
 iniciar programa:
 ./processflow [workflowFile] //opcional
 ```
-- se nao passar workflowFile, deve iniciar no modo Interativo (onde aparece o prompt e tal)
+- se nao passar workflowFile, deve iniciar no modo Interativo (onde aparece o prompt e tal) [OK]
 
 ## observações
 - checar os parametros antes de aceitar e retornar uma mensagem de erro explicando o problema e continuar o processo ou cancelar 
 ### deve:
 #### IMPRIMIR uma mensagem e ENCERRAR o programa quando:
 - numero incorreto de parametros for passado ao INICIAR o processFlow
-- arquivo workflow nao existe ou nao pode ser aberto (n tem permissao, etc)
+- arquivo workflow nao existe ou nao pode ser aberto (n tem permissao, etc) [OK]
 
 #### IMPRIMR uma mensagem e CONTINUAR o programa quando:
 - uma tarefa passada como parametro nao existir
@@ -133,7 +121,7 @@ iniciar programa:
 - um job passado nao existir
 - um diretorio informado em workdir nao existir
 
-#### outros casos (forma coerente) ???
+#### outros casos (forma coerente)
 - nao passar nenhuma coisa/comando no prompt (processFlow> ) -> retorna nada
 - varios espacos em brancos em uma linha -> usar aquela funcao de remover os espaços
 - processos que terminam com codigo de saida diferente de zero -> mostrar o retorno ??
