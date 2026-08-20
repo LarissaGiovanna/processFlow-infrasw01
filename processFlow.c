@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void task(char *nameTask)
+void task(char *nameTask, char *program, char *args)
 {
+
 }
 int main(int argc, char const *argv[])
 {
@@ -48,10 +49,25 @@ int main(int argc, char const *argv[])
 
             printf("tam string comparacao: %ld\n", strlen("task"));
             printf("comp: %d\n", strcmp(command, "task"));
-
+            
             if (strstr(command, "task") != NULL && strstr(command, "task") == &command[0]) //verifica se na string digitada existe a palavra task e se task é a primeira palavra da string verificando o endereço de memoria do inicio da string
             { // task
-                printf("OK");
+                printf("OK\n");
+                char data[3];
+                
+                char *taskName = command + 5; // pega o nome da task
+
+                taskName[strcspn(taskName, "\n")] = '\0'; // remove \n do final da string
+                
+                if (taskName != "task" && taskName != NULL && strlen(taskName) > 0) //verificar para nao passar task duas vezes
+                {
+                    printf("Nome da task: %s\n", taskName);
+                    task(taskName);
+                }
+                else
+                {
+                    printf("Nome da task nao fornecido.\n");
+                }
             }
 
             if (strcmp(command, "exit") == 0 || feof(stdin))
