@@ -21,6 +21,7 @@ pdf, tar e link github -> enviados no classroom
 - [ x ] pesquisar como faz aparecer esse prompt `processFlow>` [OK]
 - [ x ] pesquisar melhor como se faz a leitura e tratamento de arquivos passados por parameto [OK]
 - [ ] ler o restante do cap 3 e ver sobre as system calls (wait, fork, exec, etc)
+- [ ] tratar casos como passar o nome da funcao duas vezes (`task task`)
 
 # Como sera
 - O orquestrador vai automatizar e coordenar tarefas em multiplos sistemas de forma centralizada, atuando como um maestro (IA search)
