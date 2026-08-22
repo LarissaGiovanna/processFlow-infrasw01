@@ -36,6 +36,7 @@ int main(int argc, char const *argv[])
     else
     { // interativo
         char input[256] = "";
+        Task *head = NULL; // ponteiro para a primeira task da lista
         while (strcmp(input, "exit") != 0 || feof(stdin) == 0)
         {
             printf("processflow> ");
@@ -59,7 +60,6 @@ int main(int argc, char const *argv[])
 
             char *command = data[0]; // pega o nome do comando
 
-            Task *head = NULL; // ponteiro para a primeira task da lista
             if (command && strcmp(command, "task") == 0)
             {
                 if (data[1] == NULL)
@@ -78,25 +78,9 @@ int main(int argc, char const *argv[])
                     printf("args: %s\n", args);
                     if (taskName != NULL && program != NULL)
                     {
-                        Task *newTask = createTask(taskName, program, args);
-                        if (newTask == NULL)
-                        {
-                            printf("Falha ao criar a task %s.\n", taskName);
-                        }
-                        else
-                        {
-                            printf("task iniciada\n");
-                            addTask(&head, newTask);
-                        }
-                        if (head != NULL)
-                        {
+                        addTask(&head, createTask(taskName, program, args));
                             printf("Task %s adicionada com sucesso.\n", taskName);
                             printTasks(head); // imprime a lista de tasks
-                        }
-                        else
-                        {
-                            printf("Falha ao adicionar a task %s.\n", taskName);
-                        }
                     }
                     else
                     { // segmentation fault se nao passar o args
