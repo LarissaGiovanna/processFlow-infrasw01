@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#if defined(__unix__) || defined(__APPLE__) //compatibilidade macOS
 #include <sys/wait.h>
+#endif
 
 void run(Task *task)
 {
@@ -27,7 +29,7 @@ void run(Task *task)
         }else{
             printf("programa %s executado com sucesso\n", task->program);
         }
-        //exit(0); //encerra o processo filho
+        
         
     }
     else if (pid > 0)
