@@ -38,31 +38,46 @@ int main(int argc, char const *argv[])
     }
     else
     { // interativo
-        char command[256] = "";
-        while (strcmp(command, "exit") != 0)
+        char input[256] = "";
+        while (strcmp(input, "exit") != 0 || feof(stdin) == 0)
         {
             printf("processflow> ");
-            fgets(command, sizeof(command), stdin);
-            command[strcspn(command, "\n")] = '\0'; // remove \n do final da string
-            printf("comando encontrado: %s\n", command);
-            printf("tamanho do comando: %ld\n", strlen(command));
+            fgets(input, sizeof(input), stdin);
+            input[strcspn(input, "\n")] = '\0'; // remove \n do final da string
 
-            printf("tam string comparacao: %ld\n", strlen("task"));
-            printf("comp: %d\n", strcmp(command, "task"));
-            
-            if (strstr(command, "task") != NULL && strstr(command, "task") == &command[0]) //verifica se na string digitada existe a palavra task e se task é a primeira palavra da string verificando o endereço de memoria do inicio da string
+            printf("comando encontrado: %s\n", input);
+
+            //========== se der tempo, jogar esse processo para uma funcao separada para ficar mais organizado ==========
+            char *data[4] = {NULL, NULL, NULL, NULL}; // array para armazenar os dados do comando
+            char *token = strtok(input, " ");
+
+                int i = 0;
+                while (token)
+                {
+                    data[i] = token;
+                    i++;
+                    token = strtok(NULL, " ");
+                }
+                //==== ate aqui ===== 
+
+            char *command = data[0]; // pega o nome do comando
+            if (command && strcmp(command, "task") == 0) 
             { // task
                 printf("OK\n");
-                char data[3];
-                
-                char *taskName = command + 5; // pega o nome da task
+                if (data[1] == NULL)
+                {
+                    printf("Informe o nome da task.\n");
+                    continue;
+                }
+                char *taskName = data[1]; // pega o nome da task
+                printf("taskName: %s\n", taskName);
 
                 taskName[strcspn(taskName, "\n")] = '\0'; // remove \n do final da string
                 
                 if (taskName != "task" && taskName != NULL && strlen(taskName) > 0) //verificar para nao passar task duas vezes
                 {
                     printf("Nome da task: %s\n", taskName);
-                    task(taskName);
+                    //task(taskName);
                 }
                 else
                 {
@@ -70,7 +85,7 @@ int main(int argc, char const *argv[])
                 }
             }
 
-            if (strcmp(command, "exit") == 0 || feof(stdin))
+            if (strcmp(command, "exit") == 0 || feof(stdin) == 1)
             { // saida exit
                 printf("Saindo do programa.\n");
                 break;
