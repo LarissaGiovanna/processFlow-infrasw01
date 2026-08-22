@@ -3,38 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "task.h"
+#include "run.h"
 
-void run(Task *task)
-{
-    if (task == NULL)
-    {
-        printf("Task nao encontrada.\n");
-        return;
-    }
-
-    pid_t pid = fork(); //cria um novo processo
-
-    if (pid == 0)
-    {
-        // filho
-        printf("Executando task: %s\n", task->name);
-        printf("id do filho: %d\n", getpid());
-        //execlp?
-        exit(EXIT_FAILURE);
-    }
-    else if (pid > 0)
-    {
-        // pai
-        printf("id do pai: %d\n", getpid());
-        wait(NULL); //esperando o fillho terminar
-        printf("Task %s concluida.\n", task->name);
-    }
-    else
-    {
-        printf("Erro ao executar a task %s\n", task->name);
-       
-    }
-}
 int main(int argc, char const *argv[])
 {
     // inicializacao modos interativo e workflow

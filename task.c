@@ -46,7 +46,7 @@ void printTasks(Task *head)
     Task *atual = head;
     while (atual != NULL)
     {
-        printf("Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args); // nao ta printando
+        printf("Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args); 
         atual = atual->next;
     }
 }
