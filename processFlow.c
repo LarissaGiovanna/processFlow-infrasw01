@@ -119,6 +119,15 @@ int main(int argc, char const *argv[])
                     }
                     runSequential(head, taskList); // executa os comandos sequenciais
                 }
+                else if (strcmp(taskName, "parallel") == 0)
+                {
+                    const char* taskList[400] = {NULL}; // array para armazenar os nomes das tasks
+                    for (int i = 2; data[i] != NULL; i++)
+                    {
+                        taskList[i - 2] = data[i]; // armazena os nomes das tasks no array
+                    }
+                    runParallel(head, taskList); // executa os comandos em paralelo
+                }
                 else
                 {
                     Task *taskToRun = findTask(head, taskName);
