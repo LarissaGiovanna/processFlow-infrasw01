@@ -41,13 +41,13 @@ int main(int argc, char const *argv[])
             printf("processflow> ");
             fgets(input, sizeof(input), stdin);
             input[strcspn(input, "\n")] = '\0'; // remove \n do final da string
-            
+
             printf("comando encontrado: %s\n", input);
-            
+
             //========== se der tempo, jogar esse processo para uma funcao separada para ficar mais organizado ==========
             char *data[4] = {NULL, NULL, NULL, NULL}; // array para armazenar os dados do comando
             char *token = strtok(input, " ");
-            
+
             int i = 0;
             while (token)
             {
@@ -55,29 +55,53 @@ int main(int argc, char const *argv[])
                 i++;
                 token = strtok(NULL, " ");
             }
-            //==== ate aqui ===== 
-            
+            //==== ate aqui =====
+
             char *command = data[0]; // pega o nome do comando
-            
+
             Task *head = NULL; // ponteiro para a primeira task da lista
-            if (command && strcmp(command, "task") == 0) 
-            { // task
+            if (command && strcmp(command, "task") == 0)
+            {
                 if (data[1] == NULL)
                 {
                     printf("Informe o nome da task.\n");
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
-                printf("taskName: %s\n", taskName);
 
-                
-                
-                if (taskName != "task" && taskName != NULL && strlen(taskName) > 0) //verificar para nao passar task duas vezes
+                if (taskName != "task" && taskName != NULL && strlen(taskName) > 0) // verificar para nao passar task duas vezes
                 {
                     char *program = data[2]; // pega o nome do programa
                     char *args = data[3];    // pega os argumentos do programa
                     printf("Nome da task: %s\n", taskName);
-                    head = createTask(head, taskName, program, args);
+                    printf("Programa: %s\n", program);
+                    printf("args: %s\n", args);
+                    if (taskName != NULL && program != NULL)
+                    {
+                        Task *newTask = createTask(taskName, program, args);
+                        if (newTask == NULL)
+                        {
+                            printf("Falha ao criar a task %s.\n", taskName);
+                        }
+                        else
+                        {
+                            printf("task iniciada\n");
+                            addTask(&head, newTask);
+                        }
+                        if (head != NULL)
+                        {
+                            printf("Task %s adicionada com sucesso.\n", taskName);
+                            printTasks(head); // imprime a lista de tasks
+                        }
+                        else
+                        {
+                            printf("Falha ao adicionar a task %s.\n", taskName);
+                        }
+                    }
+                    else
+                    { // segmentation fault se nao passar o args
+                        printf("Nome da task ou programa nao fornecido.\n");
+                    }
                 }
                 else
                 {

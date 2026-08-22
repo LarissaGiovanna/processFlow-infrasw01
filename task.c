@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "task.h"
 
-Task *createTask(char *nameTask, char *program, char *args){
+Task *createTask(char *nameTask, char *program, char *args){ //ok
     Task *newTask = (Task *)malloc(sizeof(Task));
     newTask->name = strdup(nameTask); //strdup aloca memoria e copia a string para o novo ponteiro
     newTask->program = strdup(program);
@@ -13,11 +13,13 @@ Task *createTask(char *nameTask, char *program, char *args){
     return newTask;
 }
 
-void addTask(Task* head, Task* newTask){
-    if (head == NULL) {
-        head = newTask;
+void addTask(Task** head, Task* newTask){
+    if (*head == NULL) {
+        *head = newTask;
+        printf("head = newTask\n");
     } else {
-        Task *atual = head;
+        printf("head nao esta vazio\n");
+        Task *atual = *head;
         while (atual->next != NULL) {
             atual = atual->next;
         }
@@ -28,7 +30,7 @@ void addTask(Task* head, Task* newTask){
 void printTasks(Task* head) {
     Task *atual = head;
     while (atual != NULL) {
-        printf("Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args);
+        printf("Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args); //nao ta printando
         atual = atual->next;
     }
 }
