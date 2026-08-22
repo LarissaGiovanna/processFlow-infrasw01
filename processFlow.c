@@ -4,6 +4,37 @@
 #include <unistd.h>
 #include "task.h"
 
+void run(Task *task)
+{
+    if (task == NULL)
+    {
+        printf("Task nao encontrada.\n");
+        return;
+    }
+
+    pid_t pid = fork(); //cria um novo processo
+
+    if (pid == 0)
+    {
+        // filho
+        printf("Executando task: %s\n", task->name);
+        printf("id do filho: %d\n", getpid());
+        //execlp?
+        exit(EXIT_FAILURE);
+    }
+    else if (pid > 0)
+    {
+        // pai
+        printf("id do pai: %d\n", getpid());
+        wait(NULL); //esperando o fillho terminar
+        printf("Task %s concluida.\n", task->name);
+    }
+    else
+    {
+        printf("Erro ao executar a task %s\n", task->name);
+       
+    }
+}
 int main(int argc, char const *argv[])
 {
     // inicializacao modos interativo e workflow
@@ -37,6 +68,7 @@ int main(int argc, char const *argv[])
     { // interativo
         char input[256] = "";
         Task *head = NULL; // ponteiro para a primeira task da lista
+
         while (strcmp(input, "exit") != 0 || feof(stdin) == 0)
         {
             printf("processflow> ");
@@ -92,6 +124,41 @@ int main(int argc, char const *argv[])
                     printf("Nome da task nao fornecido.\n");
                 }
             }
+            else if (command && strcmp(command, "run") == 0)
+            {
+                if (data[1] == NULL)
+                {
+                    printf("Informe o nome da task a ser executada.\n");
+                    continue;
+                }
+                char *taskName = data[1]; // pega o nome da task
+                Task *taskToRun = findTask(head, taskName);
+                if (taskToRun != NULL)
+                {
+                    printf("task a ser executada: %s\n", taskToRun->name);
+                    run(taskToRun); //add a parte do run
+                }
+                else
+                {
+                    printf("Task %s nao encontrada.\n", taskName);
+                }
+            }
+            else if (command && strcmp(command, "list") == 0)
+            {
+                printTasks(head); // imprime a lista de tasks
+            }
+            else if (command && strcmp(command, "help") == 0)
+            {
+                printf("Comandos disponiveis:\n");
+                printf("task <nome> <programa> <args> - Adiciona uma nova task\n");
+                printf("run <nome> - Executa a task especificada\n");
+                printf("list - Lista todas as tasks\n");
+                printf("exit - Sai do programa\n");
+            }
+            else if (command && strlen(command) > 0)
+            {
+                printf("Comando desconhecido: %s\n", command);
+            }
 
             if (strcmp(command, "exit") == 0 || feof(stdin) == 1)
             { // saida exit
@@ -101,16 +168,3 @@ int main(int argc, char const *argv[])
         }
     }
 }
-
-// processos
-//  pid_t pid = fork();
-//  if (pid == 0) {
-//      // Child process
-//      printf("Child process: %d\n", getpid());
-//  } else if (pid > 0) {
-//      // Parent process
-//      printf("Parent process: %d\n", getpid());
-//  } else {
-//      // Fork failed
-//      perror("fork");
-//  }
