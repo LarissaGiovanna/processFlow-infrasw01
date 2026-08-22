@@ -57,3 +57,4 @@ dkms.conf
 # arquivos teste de texto
 *.txt
 *.pf
+/.vscode
