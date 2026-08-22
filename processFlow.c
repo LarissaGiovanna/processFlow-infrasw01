@@ -2,11 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "task.h"
 
-void task(char *nameTask, char *program, char *args)
-{
-
-}
 int main(int argc, char const *argv[])
 {
     // inicializacao modos interativo e workflow
@@ -44,26 +41,27 @@ int main(int argc, char const *argv[])
             printf("processflow> ");
             fgets(input, sizeof(input), stdin);
             input[strcspn(input, "\n")] = '\0'; // remove \n do final da string
-
+            
             printf("comando encontrado: %s\n", input);
-
+            
             //========== se der tempo, jogar esse processo para uma funcao separada para ficar mais organizado ==========
             char *data[4] = {NULL, NULL, NULL, NULL}; // array para armazenar os dados do comando
             char *token = strtok(input, " ");
-
-                int i = 0;
-                while (token)
-                {
-                    data[i] = token;
-                    i++;
-                    token = strtok(NULL, " ");
-                }
-                //==== ate aqui ===== 
-
+            
+            int i = 0;
+            while (token)
+            {
+                data[i] = token;
+                i++;
+                token = strtok(NULL, " ");
+            }
+            //==== ate aqui ===== 
+            
             char *command = data[0]; // pega o nome do comando
+            
+            Task *head = NULL; // ponteiro para a primeira task da lista
             if (command && strcmp(command, "task") == 0) 
             { // task
-                printf("OK\n");
                 if (data[1] == NULL)
                 {
                     printf("Informe o nome da task.\n");
@@ -72,12 +70,14 @@ int main(int argc, char const *argv[])
                 char *taskName = data[1]; // pega o nome da task
                 printf("taskName: %s\n", taskName);
 
-                taskName[strcspn(taskName, "\n")] = '\0'; // remove \n do final da string
+                
                 
                 if (taskName != "task" && taskName != NULL && strlen(taskName) > 0) //verificar para nao passar task duas vezes
                 {
+                    char *program = data[2]; // pega o nome do programa
+                    char *args = data[3];    // pega os argumentos do programa
                     printf("Nome da task: %s\n", taskName);
-                    //task(taskName);
+                    head = createTask(head, taskName, program, args);
                 }
                 else
                 {
