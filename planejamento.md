@@ -22,6 +22,8 @@ pdf, tar e link github -> enviados no classroom
 - [ x ] pesquisar melhor como se faz a leitura e tratamento de arquivos passados por parameto [OK]
 - [ ] ler o restante do cap 3 e ver sobre as system calls (wait, fork, exec, etc)
 - [ ] tratar casos como passar o nome da funcao duas vezes (`task task`)
+- [ ] colocar em uma funcao a parte da separacao das strings
+- [ ] colocar em uma funcao a parte dos if e else e chamadas das funcoes
 
 # Como sera
 - O orquestrador vai automatizar e coordenar tarefas em multiplos sistemas de forma centralizada, atuando como um maestro (IA search)
@@ -48,12 +50,12 @@ processflow> task listar /bin/ls -l
 
 ## comandos
 - para ambos os modos, para sair, sera o comando `exit` [OK]
-- para executar as tarefas cadastradas, devera ser executada com `run <nome_tarefa>`
+- para executar as tarefas cadastradas, devera ser executada com `run <nome_tarefa>` [OK]
 
 ### modos execucao
-- mais de uma tarefa pode ser passada no comando e ser executada:
+- mais de uma tarefa pode ser passada no comando e ser executada: [OK]
 
-#### sequencial
+#### sequencial [OK]
 - a tarefa deve **somente iniciar quando a anterior terminar** (avisar quando terminar para poder passar para a proxima)
 ```bash
 Sintaze:
