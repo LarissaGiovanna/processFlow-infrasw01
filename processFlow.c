@@ -43,7 +43,14 @@ int main(int argc, char const *argv[])
         {
             printf("processflow> ");
             fgets(input, sizeof(input), stdin);
+
             input[strcspn(input, "\n")] = '\0'; // remove \n do final da string
+            
+            if (strcmp(input, "exit") == 0 || feof(stdin) != 0)
+            { // saida exit
+                printf("Saindo do programa.\n");
+                break;
+            }
 
             printf("comando encontrado: %s\n", input);
 
@@ -106,7 +113,7 @@ int main(int argc, char const *argv[])
                 if (taskToRun != NULL)
                 {
                     printf("task a ser executada: %s\n", taskToRun->name);
-                    run(taskToRun); //add a parte do run
+                    run(taskToRun); 
                 }
                 else
                 {
@@ -130,11 +137,7 @@ int main(int argc, char const *argv[])
                 printf("Comando desconhecido: %s\n", command);
             }
 
-            if (strcmp(command, "exit") == 0 || feof(stdin) == 1)
-            { // saida exit
-                printf("Saindo do programa.\n");
-                break;
-            }
+            
         }
     }
 }
