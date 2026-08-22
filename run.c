@@ -46,3 +46,39 @@ void run(Task *task)
     }
 }
 
+void runSequential(Task* head, const char *argv[])
+{
+    if (argv == NULL)
+    {
+        printf("nenhuma tarefa fornecida\n");
+        return;
+    }
+
+    for (int i = 0; argv[i] != NULL; i++) //percorrer todos os args
+    {
+        Task *task = findTask(head, (char*)argv[i]); //procura a task na lista de tasks
+        pid_t pid = fork(); //cria um novo processo
+
+        if (pid == 0)
+        {
+            // filho
+            printf("Executando comando: %s\n", argv[i]);
+            int exe = execlp(task->program, task->args, NULL); //executa o programa
+            if (exe == -1)
+            {
+                printf("Erro ao executar o comando %s\n", argv[i]);
+            }
+            exit(0);
+        }
+        else if (pid > 0)
+        {
+            // pai
+            wait(NULL); //esperando o fillho terminar
+            printf("Comando %s concluido.\n", argv[i]);
+        }
+        else
+        {
+            printf("Erro ao executar o comando %s\n", argv[i]);
+        }
+    }
+}

@@ -36,7 +36,7 @@ int main(int argc, char const *argv[])
     }
     else
     { // interativo
-        char input[256] = "";
+        char input[512] = "";
         Task *head = NULL; // ponteiro para a primeira task da lista
 
         while (strcmp(input, "exit") != 0 || feof(stdin) == 0)
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
             fgets(input, sizeof(input), stdin);
 
             input[strcspn(input, "\n")] = '\0'; // remove \n do final da string
-            
+
             if (strcmp(input, "exit") == 0 || feof(stdin) != 0)
             { // saida exit
                 printf("Saindo do programa.\n");
@@ -55,7 +55,7 @@ int main(int argc, char const *argv[])
             printf("comando encontrado: %s\n", input);
 
             //========== se der tempo, jogar esse processo para uma funcao separada para ficar mais organizado ==========
-            char *data[4] = {NULL, NULL, NULL, NULL}; // array para armazenar os dados do comando
+            char *data[512] = {NULL}; // array para armazenar os dados do comando
             char *token = strtok(input, " ");
 
             int i = 0;
@@ -88,8 +88,8 @@ int main(int argc, char const *argv[])
                     if (taskName != NULL && program != NULL)
                     {
                         addTask(&head, createTask(taskName, program, args));
-                            printf("Task %s adicionada com sucesso.\n", taskName);
-                            printTasks(head); // imprime a lista de tasks
+                        printf("Task %s adicionada com sucesso.\n", taskName);
+                        printTasks(head); // imprime a lista de tasks
                     }
                     else
                     { // segmentation fault se nao passar o args
@@ -109,15 +109,28 @@ int main(int argc, char const *argv[])
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
-                Task *taskToRun = findTask(head, taskName);
-                if (taskToRun != NULL)
+
+                if (strcmp(taskName, "sequential") == 0)
                 {
-                    printf("task a ser executada: %s\n", taskToRun->name);
-                    run(taskToRun); 
+                    const char* taskList[400] = {NULL}; // array para armazenar os nomes das tasks
+                    for (int i = 2; data[i] != NULL; i++)
+                    {
+                        taskList[i - 2] = data[i]; // armazena os nomes das tasks no array
+                    }
+                    runSequential(head, taskList); // executa os comandos sequenciais
                 }
                 else
                 {
-                    printf("Task %s nao encontrada.\n", taskName);
+                    Task *taskToRun = findTask(head, taskName);
+                    if (taskToRun != NULL)
+                    {
+                        printf("task a ser executada: %s\n", taskToRun->name);
+                        run(taskToRun);
+                    }
+                    else
+                    {
+                        printf("Task %s nao encontrada.\n", taskName);
+                    }
                 }
             }
             else if (command && strcmp(command, "list") == 0)
@@ -136,8 +149,6 @@ int main(int argc, char const *argv[])
             {
                 printf("Comando desconhecido: %s\n", command);
             }
-
-            
         }
     }
 }
