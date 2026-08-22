@@ -25,12 +25,12 @@ pdf, tar e link github -> enviados no classroom
 
 # Como sera
 - O orquestrador vai automatizar e coordenar tarefas em multiplos sistemas de forma centralizada, atuando como um maestro (IA search)
-- Arquivo em C que recebe as tasks via args
+- Arquivo em C que recebe as tasks via args [OK]
 
 ## modos diferentes
 ### interativo
 - deve executar e aparecer no terminal (processflow>) -> pesquisar como faz isso [OK]
-- usuario deve digitar os comandos 
+- usuario deve digitar os comandos [OK]
 ```bash
 Sintaxe:
 processflow> task <nome> <programa> [argumentos...]
