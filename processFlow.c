@@ -204,6 +204,27 @@ int main(int argc, char const *argv[])
                     printf("Task %s nao encontrada.\n", taskName);
                 }
             }
+            else if (command && strcmp(command, "append") == 0){
+                if (data[1] == NULL || data[2] == NULL)
+                {
+                    printf("Informe o nome da task e o arquivo de saida.\n");
+                    continue;
+                }
+                char *taskName = data[1]; // pega o nome da task
+                char *appendFile = data[2]; // pega o arquivo de saida
+
+                Task *taskToRun = findTask(head, taskName);
+                if (taskToRun != NULL)
+                {
+                    printf("task a ser executada: %s\n", taskToRun->name);
+                    redirectAppend(taskToRun, appendFile);
+                    printf("a saida da task %s foi redirecionada para o arquivo %s\n", taskToRun->name, appendFile);
+                }
+                else
+                {
+                    printf("Task %s nao encontrada.\n", taskName);
+                }
+            }
             else if (command && strcmp(command, "help") == 0)
             {
                 printf("Comandos disponiveis:\n");
