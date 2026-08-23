@@ -62,8 +62,8 @@ Sintaze:
 processflow> run sequential tarefa1 tarefa2 tarefa3
 ```
 
-#### paralelo
-- todas as tarefas devem ser iniciadas antes que o ProcessFlow espere pelo término do grupo. ???
+#### paralelo [OK]
+- todas as tarefas devem ser iniciadas antes que o ProcessFlow espere pelo término do grupo.
 ```bash
 Sintaxe:
 processflow> run parallel tarefa1 tarefa2 tarefa3
@@ -79,7 +79,7 @@ Ex:
 processflow> run pipe listar ordenar contar
 ```
 
-### redirecionamento ( > )
+### redirecionamento ( > ) [OK]
 - uma tarefa pode receber sua entrada DE um arquivo OU enviar SUA saida para um arquivo
 ```bash
 EX:
@@ -88,8 +88,8 @@ processflow> output ordenar resultado.txt //a saida de ordenar vai para resultad
 processflow> append ordenar historico.txt //adiciona a saida de ordenar em historico.txt
 ```
 
-### diretorios de trabalho
-- comando `workdir` serve como uma junção do `mkdir` e do `cd` e altera o diretório utilizado pelas tarefas executadas posteriormente. Ex: `workdir pasta/` e `run tarefa1`, o comando run sera executado dentro da pasta. ???
+### diretorios de trabalho [OK]
+- comando `workdir` serve como uma junção do `mkdir` e do `cd` e altera o diretório utilizado pelas tarefas executadas posteriormente. Ex: `workdir pasta/` e `run tarefa1`, o comando run sera executado dentro da pasta. 
 
 ### execução em background
 - comando `start <tarefa>` inicia a tarefa em segundo plano e mostra o prompt (processflow>) mesmo se a tarefa nao terminar
