@@ -6,6 +6,8 @@
 #if defined(__unix__) || defined(__APPLE__) // compatibilidade macOS
 #include <sys/wait.h>
 #endif
+#include <fcntl.h>
+#include <string.h>
 
 void run(Task *task)
 {
@@ -118,6 +120,7 @@ void runParallel(Task *head, const char *argv[])
         // pai
         printf("Comandos enviados para serem executados em paralelo\n");
         wait(NULL); // esperando o fillho terminar
+        printf("terminou");
     }
     else
     {
@@ -126,3 +129,58 @@ void runParallel(Task *head, const char *argv[])
 
     printf("Todos os comandos foram executados em paralelo\n");
 }
+
+void redirectInput(Task *task, char* inputFile){
+    if (task == NULL)
+    {
+        printf("Task nao encontrada.\n");
+        return;
+    }
+
+    pid_t pid = fork(); // cria um novo processo
+
+    if (pid == 0)
+    {
+        // filho
+        printf("Executando task: %s\n", task->name);
+        printf("id do filho: %d\n", getpid());
+
+        inputFile[strcspn(inputFile, "\n")] = '\0';
+        int fileDescriptor = open(inputFile, O_RDONLY); // abre o arquivo de entrada
+        if (fileDescriptor < 0)
+        {
+            printf("Erro ao abrir o arquivo de entrada\n");
+            exit(1);
+        }
+        printf("arquivo de entrada %s aberto com sucesso\n", inputFile);
+        dup2(fileDescriptor, STDIN_FILENO); // redireciona a entrada padrão para o arquivo
+        close(fileDescriptor); // fecha o arquivo de entrada
+        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        if (exe == -1)
+        {
+            printf("Erro ao executar o programa %s\n", task->program);
+            exit(1);
+        }
+        else
+        {
+            printf("programa %s executado com sucesso\n", task->program);
+            exit(0);
+        }
+    }
+    else if (pid > 0)
+    {
+        // pai
+        printf("id do pai: %d\n", getpid());
+        wait(NULL); // esperando o fillho terminar
+        printf("Task %s concluida.\n", task->name);
+    }
+    else
+    {
+        printf("Erro ao executar a task %s\n", task->name);
+    }
+}
+
+
+// void start(Task* task){
+//     //logica da funcao run mas inicia a tarefa sem esperar terminar e printa o id do processo filho e o id do job
+// }

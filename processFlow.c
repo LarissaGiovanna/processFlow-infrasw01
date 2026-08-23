@@ -160,6 +160,28 @@ int main(int argc, char const *argv[])
                     printf("Informe o caminho do diretorio.\n");
                 }
             }
+            else if (command && strcmp(command, "input") == 0)
+            {
+                if (data[1] == NULL || data[2] == NULL)
+                {
+                    printf("Informe o nome da task e o arquivo de entrada.\n");
+                    continue;
+                }
+                char *taskName = data[1]; // pega o nome da task
+                char *inputFile = data[2]; // pega o arquivo de entrada
+
+                Task *taskToRun = findTask(head, taskName);
+                if (taskToRun != NULL)
+                {
+                    printf("task a ser executada: %s\n", taskToRun->name);
+                    redirectInput(taskToRun, inputFile);
+                    printf("a entrada do arquivo %s foi redirecionada para a task %s\n", inputFile, taskToRun->name);
+                }
+                else
+                {
+                    printf("Task %s nao encontrada.\n", taskName);
+                }
+            }
             else if (command && strcmp(command, "help") == 0)
             {
                 printf("Comandos disponiveis:\n");
