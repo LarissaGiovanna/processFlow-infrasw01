@@ -9,7 +9,14 @@ Task *createTask(char *nameTask, char *program, char *args)
     Task *newTask = (Task *)malloc(sizeof(Task));
     newTask->name = strdup(nameTask); // strdup aloca memoria e copia a string para o novo ponteiro
     newTask->program = strdup(program);
-    newTask->args = strdup(args);
+    if (args == NULL)
+    {
+        newTask->args = NULL;
+    }
+    else
+    {
+        newTask->args = strdup(args);
+    }
     newTask->next = NULL;
     return newTask;
 }
@@ -46,7 +53,7 @@ void printTasks(Task *head)
     Task *atual = head;
     while (atual != NULL)
     {
-        printf("Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args); 
+        printf("Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args);
         atual = atual->next;
     }
 }
