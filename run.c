@@ -179,6 +179,55 @@ void redirectInput(Task *task, char* inputFile){
         printf("Erro ao executar a task %s\n", task->name);
     }
 }
+void redirectOutput(Task *task, char* outputFile){
+    if (task == NULL)
+    {
+        printf("Task nao encontrada.\n");
+        return;
+    }
+
+    pid_t pid = fork(); // cria um novo processo
+
+    if (pid == 0)
+    {
+        // filho
+        printf("Executando task: %s\n", task->name);
+        printf("id do filho: %d\n", getpid());
+
+        outputFile[strcspn(outputFile, "\n")] = '\0';
+        int fileDescriptor = open(outputFile, O_WRONLY | O_CREAT, 0644); // abre o arquivo de entrada 
+        if (fileDescriptor < 0)
+        {
+            printf("Erro ao abrir o arquivo de entrada\n");
+            exit(1);
+        }
+        printf("arquivo de entrada %s aberto com sucesso\n", outputFile);
+        dup2(fileDescriptor, STDOUT_FILENO); // redireciona a saída padrão para o arquivo
+        close(fileDescriptor); // fecha o arquivo de entrada
+        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        if (exe == -1)
+        {
+            printf("Erro ao executar o programa %s\n", task->program);
+            exit(1);
+        }
+        else
+        {
+            printf("programa %s executado com sucesso\n", task->program);
+            exit(0);
+        }
+    }
+    else if (pid > 0)
+    {
+        // pai
+        printf("id do pai: %d\n", getpid());
+        wait(NULL); // esperando o fillho terminar
+        printf("Task %s concluida.\n", task->name);
+    }
+    else
+    {
+        printf("Erro ao executar a task %s\n", task->name);
+    }
+}
 
 
 // void start(Task* task){
