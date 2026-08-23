@@ -146,6 +146,20 @@ int main(int argc, char const *argv[])
             {
                 printTasks(head); // imprime a lista de tasks
             }
+            else if (command && strcmp(command, "workdir") == 0){
+                printf("diretorio atual: %s\n", getcwd(NULL, 0));
+                char* directory = data[1];
+                if (directory != NULL && strlen(directory) > 0){
+                    int result = chdir(directory);
+                    if (result == 0){
+                        printf("Diretorio de trabalho alterado para: %s\n", getcwd(NULL, 0));
+                    } else {
+                        perror("Erro ao alterar o diretorio de trabalho");
+                    }
+                } else {
+                    printf("Informe o caminho do diretorio.\n");
+                }
+            }
             else if (command && strcmp(command, "help") == 0)
             {
                 printf("Comandos disponiveis:\n");
