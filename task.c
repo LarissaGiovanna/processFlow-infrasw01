@@ -7,6 +7,11 @@
 Task *createTask(char *nameTask, char *program, char *args)
 { // ok
     Task *newTask = (Task *)malloc(sizeof(Task));
+    if (newTask == NULL)
+    {
+        printf("Erro ao alocar memoria para a nova task\n");
+        return NULL;
+    }
     newTask->name = strdup(nameTask); // strdup aloca memoria e copia a string para o novo ponteiro
     newTask->program = strdup(program);
     if (args == NULL)
