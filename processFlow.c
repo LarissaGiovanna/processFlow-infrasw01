@@ -42,6 +42,7 @@ int main(int argc, char const *argv[])
         while (strcmp(input, "exit") != 0 || feof(stdin) == 0)
         {
             printf("processflow> ");
+            fflush(stdout); //limpa o buffer de saida para que o prompt seja exibido imediatamente
             fgets(input, sizeof(input), stdin);
 
             input[strcspn(input, "\n")] = '\0'; // remove \n do final da string
@@ -66,7 +67,7 @@ int main(int argc, char const *argv[])
                 token = strtok(NULL, " ");
             }
             //==== ate aqui =====
-
+            int jobQnt = 0;
             char *command = data[0]; // pega o nome do comando
 
             if (command && strcmp(command, "task") == 0)
@@ -219,6 +220,28 @@ int main(int argc, char const *argv[])
                     printf("task a ser executada: %s\n", taskToRun->name);
                     redirectAppend(taskToRun, appendFile);
                     printf("a saida da task %s foi redirecionada para o arquivo %s\n", taskToRun->name, appendFile);
+                }
+                else
+                {
+                    printf("Task %s nao encontrada.\n", taskName);
+                }
+            }
+            else if (command && strcmp(command, "start") == 0)
+            {
+                if (data[1] == NULL)
+                {
+                    printf("Informe o nome da task a ser iniciada.\n");
+                    continue;
+                }
+                char *taskName = data[1]; // pega o nome da task
+
+                Task *taskToRun = findTask(head, taskName);
+                if (taskToRun != NULL)
+                {
+                    printf("task a ser iniciada: %s\n", taskToRun->name);
+                    Job* jobList = NULL; // lista de jobs
+                    
+                    start(taskToRun, &jobList, &jobQnt);
                 }
                 else
                 {

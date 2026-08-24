@@ -15,8 +15,7 @@ Job* createJob(int job_id, int pid){
     return newJob;
 }
 
-void addJob(Job** head, int job_id, int pid){
-    Job* newJob = createJob(job_id, pid);
+void addJob(Job** head, Job* newJob){
     if(newJob == NULL){
         printf("erro na hora de criar o novo job\n");
         return;
@@ -24,6 +23,7 @@ void addJob(Job** head, int job_id, int pid){
     if(*head == NULL){
         *head = newJob;
     }else{
+        sortJobs(head);
         Job* atual = *head;
         while(atual->next != NULL){
             atual = atual->next;
@@ -69,5 +69,21 @@ void removeJob(Job** head, int job_id){
         Job* temp = atual->next;
         atual->next = atual->next->next;
         free(temp);
+    }
+}
+
+void sortJobs(Job** head){
+    if (*head == NULL) {
+        return;
+    }
+    Job* atual = *head;
+    while (atual->next != NULL) {
+        if (atual->job_id > atual->next->job_id) {
+            // troca os jobs
+            int temp = atual->job_id;
+            atual->job_id = atual->next->job_id;
+            atual->next->job_id = temp;
+        }
+        atual = atual->next;
     }
 }

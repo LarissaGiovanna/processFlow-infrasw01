@@ -8,6 +8,7 @@
 #endif
 #include <fcntl.h>
 #include <string.h>
+#include "job.h"
 
 void run(Task *task)
 {
@@ -130,7 +131,8 @@ void runParallel(Task *head, const char *argv[])
     printf("Todos os comandos foram executados em paralelo\n");
 }
 
-void redirectInput(Task *task, char* inputFile){
+void redirectInput(Task *task, char *inputFile)
+{
     if (task == NULL)
     {
         printf("Task nao encontrada.\n");
@@ -153,8 +155,8 @@ void redirectInput(Task *task, char* inputFile){
             exit(1);
         }
         printf("arquivo de entrada %s aberto com sucesso\n", inputFile);
-        dup2(fileDescriptor, STDIN_FILENO); // redireciona a entrada padrão para o arquivo
-        close(fileDescriptor); // fecha o arquivo de entrada
+        dup2(fileDescriptor, STDIN_FILENO);                // redireciona a entrada padrão para o arquivo
+        close(fileDescriptor);                             // fecha o arquivo de entrada
         int exe = execlp(task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
@@ -179,7 +181,8 @@ void redirectInput(Task *task, char* inputFile){
         printf("Erro ao executar a task %s\n", task->name);
     }
 }
-void redirectOutput(Task *task, char* outputFile){
+void redirectOutput(Task *task, char *outputFile)
+{
     if (task == NULL)
     {
         printf("Task nao encontrada.\n");
@@ -195,15 +198,15 @@ void redirectOutput(Task *task, char* outputFile){
         printf("id do filho: %d\n", getpid());
 
         outputFile[strcspn(outputFile, "\n")] = '\0';
-        int fileDescriptor = open(outputFile, O_WRONLY | O_TRUNC | O_CREAT, 0644); // abre o arquivo de entrada 
+        int fileDescriptor = open(outputFile, O_WRONLY | O_TRUNC | O_CREAT, 0644); // abre o arquivo de entrada
         if (fileDescriptor < 0)
         {
             printf("Erro ao abrir o arquivo de entrada\n");
             exit(1);
         }
         printf("arquivo de entrada %s aberto com sucesso\n", outputFile);
-        dup2(fileDescriptor, STDOUT_FILENO); // redireciona a saída padrão para o arquivo
-        close(fileDescriptor); // fecha o arquivo de entrada
+        dup2(fileDescriptor, STDOUT_FILENO);               // redireciona a saída padrão para o arquivo
+        close(fileDescriptor);                             // fecha o arquivo de entrada
         int exe = execlp(task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
@@ -228,7 +231,8 @@ void redirectOutput(Task *task, char* outputFile){
         printf("Erro ao executar a task %s\n", task->name);
     }
 }
-void redirectAppend(Task *task, char* appendFile){
+void redirectAppend(Task *task, char *appendFile)
+{
     if (task == NULL)
     {
         printf("Task nao encontrada.\n");
@@ -244,15 +248,15 @@ void redirectAppend(Task *task, char* appendFile){
         printf("id do filho: %d\n", getpid());
 
         appendFile[strcspn(appendFile, "\n")] = '\0';
-        int fileDescriptor = open(appendFile, O_APPEND | O_WRONLY); // abre o arquivo de entrada 
+        int fileDescriptor = open(appendFile, O_APPEND | O_WRONLY); // abre o arquivo de entrada
         if (fileDescriptor < 0)
         {
             printf("Erro ao abrir o arquivo de entrada\n");
             exit(1);
         }
         printf("arquivo de entrada %s aberto com sucesso\n", appendFile);
-        dup2(fileDescriptor, STDOUT_FILENO); // redireciona a saída padrão para o arquivo
-        close(fileDescriptor); // fecha o arquivo de entrada
+        dup2(fileDescriptor, STDOUT_FILENO);               // redireciona a saída padrão para o arquivo
+        close(fileDescriptor);                             // fecha o arquivo de entrada
         int exe = execlp(task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
@@ -278,7 +282,50 @@ void redirectAppend(Task *task, char* appendFile){
     }
 }
 
+void start(Task *task, Job **head, int *jobQnt)
+{
+    if (task == NULL)
+    {
+        printf("Task nao encontrada.\n");
+        return;
+    }
 
-// void start(Task* task){
-//     //logica da funcao run mas inicia a tarefa sem esperar terminar e printa o id do processo filho e o id do job
-// }
+    pid_t pid = fork(); // cria um novo processo
+
+    if (pid == 0)
+    {
+        // filho
+        printf("Executando task: %s\n", task->name);
+        printf("id do filho: %d\n", getpid());
+
+        (*jobQnt)++;
+        printf("ID do job: %d\n", *jobQnt);
+        addJob(head, createJob(*jobQnt, getpid())); // adiciona o novo job a lista de jobs
+        printf("programa %s executado com sucesso\n", task->program);
+        printJobs(*head);                                  // imprime a lista de jobs
+        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        printf("exe: %d\n", exe);
+        if (exe == -1)
+        {
+            printf("Erro ao executar o programa %s\n", task->program);
+            exit(1);
+        }
+        else
+        {
+
+            exit(0);
+        }
+    }
+    else if (pid > 0)
+    {
+        // pai
+        printf("id do pai: %d\n", getpid());
+        fflush(stdout); //limpa o buffer de saida para que o prompt seja exibido imediatamente
+        // wait(NULL); // esperando o fillho terminar
+        
+    }
+    else
+    {
+        printf("Erro ao executar a task %s\n", task->name);
+    }
+}
