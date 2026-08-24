@@ -297,9 +297,9 @@ void start(Task *task, Job **head, int *jobQnt)
         // filho
         printf("Executando task: %s\n", task->name);
         fflush(stdout);
-        
+
         int exe = execlp(task->program, task->args, NULL); // executa o programa
-        
+
         if (exe == -1)
         {
             printf("Erro ao executar o programa %s\n", task->program);
@@ -314,12 +314,109 @@ void start(Task *task, Job **head, int *jobQnt)
         addJob(head, createJob(*jobQnt, pid)); // adiciona o novo job a lista de jobs
         printf("[%d] %d\n", *jobQnt, pid);
         printJobs(head); // imprime a lista de jobs
-        fflush(stdout); //limpa o buffer de saida para que o prompt seja exibido imediatamente
+        fflush(stdout);  // limpa o buffer de saida para que o prompt seja exibido imediatamente
         // wait(NULL); // esperando o fillho terminar
-        
     }
     else
     {
         printf("Erro ao executar a task %s\n", task->name);
+    }
+}
+
+void runPipe(Task *head, const char *argv[])
+{
+    if (argv == NULL)
+    {
+        printf("nenhuma tarefa fornecida\n");
+        return;
+    }
+    int taskCount = 0;
+
+    for (int i = 0; argv[i] != NULL; i++) // percorrer todos os args e contar quantas tarefas tem
+    {
+        taskCount++;
+    }
+
+    int pipefd[2 * (taskCount - 1)]; // array para armazenar os pipes
+    printf("quantidade de tarefas: %d\n", taskCount);
+
+    for (int i = 0; i < taskCount - 1; i++)
+    {
+        if (i < taskCount - 1) // se nao for a ultima tarefa, cria um pipe
+        {
+            // cria um pipe
+            if (pipe(&pipefd[2 * i]) == -1)
+            {
+                perror("pipe");
+                exit(EXIT_FAILURE);
+            }
+            fprintf(stderr, "pipe %d criado com sucesso\n", i);
+        }
+    }
+
+    // print pipefd
+    for (int i = 0; i < 2 * (taskCount - 1); i++)
+    {
+        printf("pipefd[%d]: %d\n", i, pipefd[i]);
+    }
+
+    for (int i = 0; i < taskCount; i++)
+    {
+
+        Task *task = findTask(head, (char *)argv[i]); // procura a task na lista de tasks
+        pid_t pid = fork();                           // cria um novo processo
+
+        if (pid == 0)
+        {
+            // filho
+            if (i > 0) // entrada para o pipe
+            {
+                fprintf(stderr, "pipe entrada %d\n", pipefd[i * 2]);
+                dup2(pipefd[2 * (i-1)], STDIN_FILENO);
+                fprintf(stderr, "redirecionando entrada do pipe para a task %s\n", task->name);
+                // close(pipefd[0]);
+            }
+            if (i < taskCount - 1) // saida para o pipe
+            {
+                fprintf(stderr, "pipe saida %d\n", pipefd[i *2]);
+                dup2(pipefd[2 * i + 1], STDOUT_FILENO);
+                fprintf(stderr, "redirecionando saida da task %s para o pipe\n", task->name);
+                // close(pipefd[1]);
+            }
+
+            for (int j = 0; j < 2 * (taskCount - 1); j++) // fecha os pipes
+            {
+                fprintf(stderr, "fechando pipe %d\n", pipefd[j]);
+                close(pipefd[j]);
+            }
+
+            fprintf(stderr, "Executando comando: %s\n", argv[i]);
+            int exe = execlp(task->program, task->args, NULL); // executa o programa
+            if (exe == -1)
+            {
+                printf("Erro ao executar o comando %s\n", argv[i]);
+                exit(1);
+            }
+        }
+        else if (pid > 0)
+        {
+            // pai
+            // wait(NULL); // esperando o fillho terminar
+
+            fprintf(stderr, "Comando %s concluido.\n", argv[i]);
+        }
+        else
+        {
+            printf("Erro ao executar o comando %s\n", argv[i]);
+        }
+    }
+    for (int i = 0; i < 2 * (taskCount - 1); i++) // fecha os pipes
+    {
+        fprintf(stderr, "fechando pipes no processo pai %d\n", pipefd[i]);
+        close(pipefd[i]);
+    }
+    for (int i = 0; i < taskCount; i++) // espera todos os filhos terminarem
+    {
+        wait(NULL);
     }
 }
