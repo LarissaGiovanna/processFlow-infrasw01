@@ -32,10 +32,14 @@ void addJob(Job** head, Job* newJob){
     }
 }
 
-void printJobs(Job* head){
-    Job* atual = head;
+void printJobs(Job** head){
+    if (*head == NULL) {
+        printf("Nenhum job em execucao.\n");
+        return;
+    }
+    Job* atual = *head;
     while(atual != NULL){
-        printf("Job ID: %d, PID: %d, isActive: %d\n", atual->job_id, atual->pid, atual->isActive);
+        printf("Job ID: %d, PID: %d\n", atual->job_id, atual->pid);
         atual = atual->next;
     }
 }

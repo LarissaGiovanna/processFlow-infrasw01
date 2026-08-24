@@ -296,30 +296,24 @@ void start(Task *task, Job **head, int *jobQnt)
     {
         // filho
         printf("Executando task: %s\n", task->name);
-        printf("id do filho: %d\n", getpid());
-
-        (*jobQnt)++;
-        printf("ID do job: %d\n", *jobQnt);
-        addJob(head, createJob(*jobQnt, getpid())); // adiciona o novo job a lista de jobs
-        printf("programa %s executado com sucesso\n", task->program);
-        printJobs(*head);                                  // imprime a lista de jobs
+        fflush(stdout);
+        
         int exe = execlp(task->program, task->args, NULL); // executa o programa
-        printf("exe: %d\n", exe);
+        
         if (exe == -1)
         {
             printf("Erro ao executar o programa %s\n", task->program);
             exit(1);
-        }
-        else
-        {
-
-            exit(0);
         }
     }
     else if (pid > 0)
     {
         // pai
         printf("id do pai: %d\n", getpid());
+        (*jobQnt)++;
+        addJob(head, createJob(*jobQnt, pid)); // adiciona o novo job a lista de jobs
+        printf("[%d] %d\n", *jobQnt, pid);
+        printJobs(head); // imprime a lista de jobs
         fflush(stdout); //limpa o buffer de saida para que o prompt seja exibido imediatamente
         // wait(NULL); // esperando o fillho terminar
         

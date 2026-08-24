@@ -38,7 +38,8 @@ int main(int argc, char const *argv[])
     { // interativo
         char input[512] = "";
         Task *head = NULL; // ponteiro para a primeira task da lista
-
+        Job* jobList = NULL; //ponteiro para a primeira task da lista de jobs
+        
         while (strcmp(input, "exit") != 0 || feof(stdin) == 0)
         {
             printf("processflow> ");
@@ -239,14 +240,19 @@ int main(int argc, char const *argv[])
                 if (taskToRun != NULL)
                 {
                     printf("task a ser iniciada: %s\n", taskToRun->name);
-                    Job* jobList = NULL; // lista de jobs
                     
                     start(taskToRun, &jobList, &jobQnt);
+                    printf("ok task no background\n");
                 }
                 else
                 {
                     printf("Task %s nao encontrada.\n", taskName);
                 }
+            }
+            else if (command && strcmp(command, "jobs") == 0)
+            {
+                // printf("head id: %d\n", jobList->job_id);
+                printJobs(&jobList);
             }
             else if (command && strcmp(command, "help") == 0)
             {
