@@ -8,6 +8,7 @@
 - [23:08 - 16:34] corrigido args qunado nao tinha. era so fazer um if e colocar ele como null na hora de criar uma task
 - [23/08 - 16:49] programa so funciona se tiver a / no começo do caminho (fazer uma funcao para colocar a barra no começo)
 - [24/08 - 00:32] start nao adiciona o job na lista encadeada (ela so retorna null). o processo filho fica em outro lugar da memoria, e o processo pai nao consegue enxergar esse processo. o ponteiro estava sendo iniciado no while, fazendo com que a lista reiniciasse [24/08 - 01:04]
+- [24/08 - 16:31] o pipe roda os comandos mas no final fica esperando uma entrada. o pipe tava dando errado na hora de acessar cada elemento e passar para o proximo
 
 
 # por quesw
