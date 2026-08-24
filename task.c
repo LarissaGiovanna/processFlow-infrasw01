@@ -9,7 +9,7 @@ Task *createTask(char *nameTask, char *program, char *args)
     Task *newTask = (Task *)malloc(sizeof(Task));
     if (newTask == NULL)
     {
-        printf("Erro ao alocar memoria para a nova task\n");
+        fprintf(stderr, "Erro ao alocar memoria para a nova task\n");
         return NULL;
     }
     newTask->name = strdup(nameTask); // strdup aloca memoria e copia a string para o novo ponteiro
@@ -30,7 +30,7 @@ void addTask(Task **head, Task *newTask)
 {
     if (newTask == NULL)
     {
-        printf("Falha ao criar a task.\n");
+        fprintf(stderr, "Falha ao criar a task.\n");
         return;
     }
     else
@@ -38,11 +38,9 @@ void addTask(Task **head, Task *newTask)
         if (*head == NULL)
         {
             *head = newTask;
-            printf("head = newTask\n");
         }
         else
         {
-            printf("head nao esta vazio\n");
             Task *atual = *head;
             while (atual->next != NULL)
             {
@@ -58,7 +56,7 @@ void printTasks(Task *head)
     Task *atual = head;
     while (atual != NULL)
     {
-        printf("Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args);
+        fprintf(stderr, "Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args);
         atual = atual->next;
     }
 }

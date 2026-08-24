@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
         FILE *file = fopen(argv[1], "r");
         if (file == NULL)
         {
-            printf("Arquivo nao encontrado. Verifique o caminho e tente novamente.\n");
+            fprintf(stderr, "Arquivo nao encontrado. Verifique o caminho e tente novamente.\n");
             return 1;
         }
         else
@@ -39,11 +39,11 @@ int main(int argc, char const *argv[])
 
                 if (strcmp(line, "exit") == 0)
                 {
-                    printf("Saindo do programa.\n");
+                    fprintf(stderr, "Saindo do programa.\n");
                     break;
                 }
 
-                printf("%s\n", line);
+                fprintf(stderr, "%s\n", line);
 
                 char *data[512] = {NULL}; // array para armazenar os dados do comando
                 char *token = strtok(line, " ");
@@ -62,7 +62,7 @@ int main(int argc, char const *argv[])
                 {
                     if (data[1] == NULL)
                     {
-                        printf("Informe o nome da task.\n");
+                        fprintf(stderr, "Informe o nome da task.\n");
                         continue;
                     }
                     char *taskName = data[1]; // pega o nome da task
@@ -74,23 +74,22 @@ int main(int argc, char const *argv[])
                         if (taskName != NULL && program != NULL)
                         {
                             addTask(&head, createTask(taskName, program, args));
-                            printf("Task %s adicionada com sucesso.\n", taskName);
                         }
                         else
                         {
-                            printf("Nome da task ou programa nao fornecido.\n");
+                            fprintf(stderr, "Nome da task ou programa nao fornecido.\n");
                         }
                     }
                     else
                     {
-                        printf("Nome da task nao fornecido.\n");
+                        fprintf(stderr, "Nome da task nao fornecido.\n");
                     }
                 }
                 else if (command && strcmp(command, "run") == 0)
                 {
                     if (data[1] == NULL)
                     {
-                        printf("Informe o nome da task a ser executada.\n");
+                        fprintf(stderr, "Informe o nome da task a ser executada.\n");
                         continue;
                     }
                     char *taskName = data[1]; // pega o nome da task
@@ -131,7 +130,7 @@ int main(int argc, char const *argv[])
                         }
                         else
                         {
-                            printf("Task %s nao encontrada.\n", taskName);
+                            fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                         }
                     }
                 }
@@ -147,7 +146,7 @@ int main(int argc, char const *argv[])
                         int result = chdir(directory);
                         if (result == 0)
                         {
-                            printf("Diretorio de trabalho alterado para: %s\n", getcwd(NULL, 0));
+                            fprintf(stderr, "Diretorio de trabalho alterado para: %s\n", getcwd(NULL, 0));
                         }
                         else
                         {
@@ -156,14 +155,14 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        printf("Informe o caminho do diretorio.\n");
+                        fprintf(stderr, "Informe o caminho do diretorio.\n");
                     }
                 }
                 else if (command && strcmp(command, "input") == 0)
                 {
                     if (data[1] == NULL || data[2] == NULL)
                     {
-                        printf("Informe o nome da task e o arquivo de entrada.\n");
+                        fprintf(stderr, "Informe o nome da task e o arquivo de entrada.\n");
                         continue;
                     }
                     char *taskName = data[1];
@@ -176,14 +175,14 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        printf("Task %s nao encontrada.\n", taskName);
+                        fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                     }
                 }
                 else if (command && strcmp(command, "output") == 0)
                 {
                     if (data[1] == NULL || data[2] == NULL)
                     {
-                        printf("Informe o nome da task e o arquivo de saida.\n");
+                        fprintf(stderr, "Informe o nome da task e o arquivo de saida.\n");
                         continue;
                     }
                     char *taskName = data[1];
@@ -196,14 +195,14 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        printf("Task %s nao encontrada.\n", taskName);
+                        fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                     }
                 }
                 else if (command && strcmp(command, "append") == 0)
                 {
                     if (data[1] == NULL || data[2] == NULL)
                     {
-                        printf("Informe o nome da task e o arquivo de saida.\n");
+                        fprintf(stderr, "Informe o nome da task e o arquivo de saida.\n");
                         continue;
                     }
                     char *taskName = data[1];
@@ -216,14 +215,14 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        printf("Task %s nao encontrada.\n", taskName);
+                        fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                     }
                 }
                 else if (command && strcmp(command, "start") == 0)
                 {
                     if (data[1] == NULL)
                     {
-                        printf("Informe o nome da task a ser iniciada.\n");
+                        fprintf(stderr, "Informe o nome da task a ser iniciada.\n");
                         continue;
                     }
                     char *taskName = data[1];
@@ -235,7 +234,7 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        printf("Task %s nao encontrada.\n", taskName);
+                        fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                     }
                 }
                 else if (command && strcmp(command, "jobs") == 0)
@@ -246,7 +245,7 @@ int main(int argc, char const *argv[])
                 {
                     if (data[1] == NULL)
                     {
-                        printf("Informe o ID do job a ser aguardado.\n");
+                        fprintf(stderr, "Informe o ID do job a ser aguardado.\n");
                         continue;
                     }
                     int jobId = atoi(data[1]);
@@ -255,17 +254,17 @@ int main(int argc, char const *argv[])
                     if (jobToWait != NULL)
                     {
                         waitpid(jobToWait->pid, NULL, 0);
-                        printf("Job %d concluido.\n", jobToWait->job_id);
+                        fprintf(stderr, "Job %d concluido.\n", jobToWait->job_id);
                         removeJob(&jobList, jobToWait->job_id);
                     }
                     else
                     {
-                        printf("Job %d nao encontrado.\n", jobId);
+                        fprintf(stderr, "Job %d nao encontrado.\n", jobId);
                     }
                 }
                 else if (command && strlen(command) > 0)
                 {
-                    printf("Comando desconhecido: %s\n", command);
+                    fprintf(stderr, "Comando desconhecido: %s\n", command);
                 }
             }
             fclose(file);
@@ -288,11 +287,9 @@ int main(int argc, char const *argv[])
 
             if (strcmp(input, "exit") == 0 || feof(stdin) != 0)
             { // saida exit
-                printf("Saindo do programa.\n");
+                fprintf(stderr, "Saindo do programa.\n");
                 break;
             }
-
-            printf("comando encontrado: %s\n", input);
 
             //========== se der tempo, jogar esse processo para uma funcao separada para ficar mais organizado ==========
             char *data[512] = {NULL}; // array para armazenar os dados do comando
@@ -313,7 +310,7 @@ int main(int argc, char const *argv[])
             {
                 if (data[1] == NULL)
                 {
-                    printf("Informe o nome da task.\n");
+                    fprintf(stderr, "Informe o nome da task.\n");
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
@@ -322,30 +319,26 @@ int main(int argc, char const *argv[])
                 {
                     char *program = data[2]; // pega o nome do programa
                     char *args = data[3];    // pega os argumentos do programa
-                    printf("Nome da task: %s\n", taskName);
-                    printf("Programa: %s\n", program);
-                    printf("args: %s\n", args);
                     if (taskName != NULL && program != NULL)
                     {
                         addTask(&head, createTask(taskName, program, args));
-                        printf("Task %s adicionada com sucesso.\n", taskName);
                         printTasks(head); // imprime a lista de tasks
                     }
                     else
                     { // segmentation fault se nao passar o args
-                        printf("Nome da task ou programa nao fornecido.\n");
+                        fprintf(stderr, "Nome da task ou programa nao fornecido.\n");
                     }
                 }
                 else
                 {
-                    printf("Nome da task nao fornecido.\n");
+                    fprintf(stderr, "Nome da task nao fornecido.\n");
                 }
             }
             else if (command && strcmp(command, "run") == 0)
             {
                 if (data[1] == NULL)
                 {
-                    printf("Informe o nome da task a ser executada.\n");
+                    fprintf(stderr, "Informe o nome da task a ser executada.\n");
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
@@ -382,12 +375,11 @@ int main(int argc, char const *argv[])
                     Task *taskToRun = findTask(head, taskName);
                     if (taskToRun != NULL)
                     {
-                        printf("task a ser executada: %s\n", taskToRun->name);
                         run(taskToRun);
                     }
                     else
                     {
-                        printf("Task %s nao encontrada.\n", taskName);
+                        fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                     }
                 }
             }
@@ -396,24 +388,23 @@ int main(int argc, char const *argv[])
                 printTasks(head); // imprime a lista de tasks
             }
             else if (command && strcmp(command, "workdir") == 0){
-                printf("diretorio atual: %s\n", getcwd(NULL, 0));
                 char* directory = data[1];
                 if (directory != NULL && strlen(directory) > 0){
                     int result = chdir(directory);
                     if (result == 0){
-                        printf("Diretorio de trabalho alterado para: %s\n", getcwd(NULL, 0));
+                        fprintf(stderr, "Diretorio de trabalho alterado para: %s\n", getcwd(NULL, 0));
                     } else {
                         perror("Erro ao alterar o diretorio de trabalho");
                     }
                 } else {
-                    printf("Informe o caminho do diretorio.\n");
+                    fprintf(stderr, "Informe o caminho do diretorio.\n");
                 }
             }
             else if (command && strcmp(command, "input") == 0)
             {
                 if (data[1] == NULL || data[2] == NULL)
                 {
-                    printf("Informe o nome da task e o arquivo de entrada.\n");
+                    fprintf(stderr, "Informe o nome da task e o arquivo de entrada.\n");
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
@@ -422,20 +413,18 @@ int main(int argc, char const *argv[])
                 Task *taskToRun = findTask(head, taskName);
                 if (taskToRun != NULL)
                 {
-                    printf("task a ser executada: %s\n", taskToRun->name);
                     redirectInput(taskToRun, inputFile);
-                    printf("a entrada do arquivo %s foi redirecionada para a task %s\n", inputFile, taskToRun->name);
                 }
                 else
                 {
-                    printf("Task %s nao encontrada.\n", taskName);
+                    fprintf(stderr,"Task %s nao encontrada.\n", taskName);
                 }
             }
             else if (command && strcmp(command, "output") == 0)
             {
                 if (data[1] == NULL || data[2] == NULL)
                 {
-                    printf("Informe o nome da task e o arquivo de saida.\n");
+                    fprintf(stderr, "Informe o nome da task e o arquivo de saida.\n");
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
@@ -444,19 +433,17 @@ int main(int argc, char const *argv[])
                 Task *taskToRun = findTask(head, taskName);
                 if (taskToRun != NULL)
                 {
-                    printf("task a ser executada: %s\n", taskToRun->name);
                     redirectOutput(taskToRun, outputFile);
-                    printf("a saida da task %s foi redirecionada para o arquivo %s\n", taskToRun->name, outputFile);
                 }
                 else
                 {
-                    printf("Task %s nao encontrada.\n", taskName);
+                    fprintf(stderr,"Task %s nao encontrada.\n", taskName);
                 }
             }
             else if (command && strcmp(command, "append") == 0){
                 if (data[1] == NULL || data[2] == NULL)
                 {
-                    printf("Informe o nome da task e o arquivo de saida.\n");
+                    fprintf(stderr, "Informe o nome da task e o arquivo de saida.\n");
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
@@ -465,20 +452,18 @@ int main(int argc, char const *argv[])
                 Task *taskToRun = findTask(head, taskName);
                 if (taskToRun != NULL)
                 {
-                    printf("task a ser executada: %s\n", taskToRun->name);
                     redirectAppend(taskToRun, appendFile);
-                    printf("a saida da task %s foi redirecionada para o arquivo %s\n", taskToRun->name, appendFile);
                 }
                 else
                 {
-                    printf("Task %s nao encontrada.\n", taskName);
+                    fprintf(stderr,"Task %s nao encontrada.\n", taskName);
                 }
             }
             else if (command && strcmp(command, "start") == 0)
             {
                 if (data[1] == NULL)
                 {
-                    printf("Informe o nome da task a ser iniciada.\n");
+                    fprintf(stderr, "Informe o nome da task a ser iniciada.\n");
                     continue;
                 }
                 char *taskName = data[1]; // pega o nome da task
@@ -486,25 +471,21 @@ int main(int argc, char const *argv[])
                 Task *taskToRun = findTask(head, taskName);
                 if (taskToRun != NULL)
                 {
-                    printf("task a ser iniciada: %s\n", taskToRun->name);
-                    
                     start(taskToRun, &jobList, &jobQnt);
-                    printf("ok task no background\n");
                 }
                 else
                 {
-                    printf("Task %s nao encontrada.\n", taskName);
+                    fprintf(stderr,"Task %s nao encontrada.\n", taskName);
                 }
             }
             else if (command && strcmp(command, "jobs") == 0)
             {
-                // printf("head id: %d\n", jobList->job_id);
                 printJobs(&jobList);
             }
             else if (command && strcmp(command, "wait") == 0){
                 if (data[1] == NULL)
                 {
-                    printf("Informe o ID do job a ser aguardado.\n");
+                    fprintf(stderr, "Informe o ID do job a ser aguardado.\n");
                     continue;
                 }
                 int jobId = atoi(data[1]); // atoi converte string para int
@@ -512,19 +493,19 @@ int main(int argc, char const *argv[])
                 Job* jobToWait = findJob(jobList, jobId);
                 if (jobToWait != NULL)
                 {
-                    printf("Aguardando o job %d...\n", jobToWait->job_id);
+                    fprintf(stderr, "Aguardando o job %d...\n", jobToWait->job_id);
                     waitpid(jobToWait->pid, NULL, 0); // aguarda o término do processo
-                    printf("Job %d concluido.\n", jobToWait->job_id);
+                    fprintf(stderr, "Job %d concluido.\n", jobToWait->job_id);
                     removeJob(&jobList, jobToWait->job_id); // remove o job da lista
                 }
                 else
                 {
-                    printf("Job %d nao encontrado.\n", jobId);
+                    fprintf(stderr, "Job %d nao encontrado.\n", jobId);
                 }
             }
             else if (command && strlen(command) > 0)
             {
-                printf("Comando desconhecido: %s\n", command);
+                fprintf(stderr, "Comando desconhecido: %s\n", command);
             }
         }
     }

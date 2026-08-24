@@ -5,7 +5,7 @@
 Job* createJob(int job_id, int pid){
     Job* newJob = (Job*)malloc(sizeof(Job));
     if(newJob == NULL){
-        printf("erro na hora da alocacao de memoria para o novo job\n");
+        fprintf(stderr, "erro na hora da alocacao de memoria para o novo job\n");
         return NULL;
     }
     newJob->job_id = job_id;
@@ -17,7 +17,7 @@ Job* createJob(int job_id, int pid){
 
 void addJob(Job** head, Job* newJob){
     if(newJob == NULL){
-        printf("erro na hora de criar o novo job\n");
+        fprintf(stderr, "erro na hora de criar o novo job\n");
         return;
     }
     if(*head == NULL){
@@ -34,12 +34,12 @@ void addJob(Job** head, Job* newJob){
 
 void printJobs(Job** head){
     if (*head == NULL) {
-        printf("Nenhum job em execucao.\n");
+        fprintf(stderr, "Nenhum job em execucao.\n");
         return;
     }
     Job* atual = *head;
     while(atual != NULL){
-        printf("Job ID: %d, PID: %d\n", atual->job_id, atual->pid);
+        fprintf(stderr, "Job ID: %d, PID: %d\n", atual->job_id, atual->pid);
         atual = atual->next;
     }
 }
