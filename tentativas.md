@@ -7,6 +7,7 @@
 - [22/08 - 14:18] ao executar uma tarefa e o programa nao existir, ele diz que nao conseguiu e quando é apertado ctrl d para sair do programa, ele encerra o processo que deu errado e depois fica esperando alguma entrada
 - [23:08 - 16:34] corrigido args qunado nao tinha. era so fazer um if e colocar ele como null na hora de criar uma task
 - [23/08 - 16:49] programa so funciona se tiver a / no começo do caminho (fazer uma funcao para colocar a barra no começo)
+- [24/08 - 00:32] start nao adiciona o job na lista encadeada (ela so retorna null). o processo filho fica em outro lugar da memoria, e o processo pai nao consegue enxergar esse processo. o ponteiro estava sendo iniciado no while, fazendo com que a lista reiniciasse [24/08 - 01:04]
 
 
 # por quesw
@@ -18,3 +19,4 @@
 - [21/08 - 22:56] task nao ta sendo adicoinado na lista e com strcpy na funcao de adicionar deu segmentation fault, e com strdup nao ta sendo adicionado
 - [22/08 - 15:17] ao executar a funcao de run parallel a funcao executa corretamente mas o print do process flow nao aparece apos o termino da funcao, mas o programa esta esperando a entrada do fgets
 - [23/08 - 17:57] ao fazer um output, criando um novo arquivo, e depois fazer um append, mostra : write error: Bad file descriptor. era so add O_WRONLY pra ele ler o arquivo e fazer o append
+- [23/08 - 23:51] comando start executa mas o prompt processflow nao aparece apos a execucao e mesmo assim aparece uma entrada. é normal de alguns comandos quando eles rodam no background
