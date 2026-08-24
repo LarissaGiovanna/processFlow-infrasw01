@@ -4,6 +4,11 @@
 #include <unistd.h>
 #include "task.h"
 #include "run.h"
+#include "job.h"
+#include <sys/types.h>
+#if defined(__unix__) || defined(__APPLE__) // compatibilidade macOS
+#include <sys/wait.h>
+#endif
 
 int main(int argc, char const *argv[])
 {
@@ -253,6 +258,27 @@ int main(int argc, char const *argv[])
             {
                 // printf("head id: %d\n", jobList->job_id);
                 printJobs(&jobList);
+            }
+            else if (command && strcmp(command, "wait") == 0){
+                if (data[1] == NULL)
+                {
+                    printf("Informe o ID do job a ser aguardado.\n");
+                    continue;
+                }
+                int jobId = atoi(data[1]); // atoi converte string para int
+
+                Job* jobToWait = findJob(jobList, jobId);
+                if (jobToWait != NULL)
+                {
+                    printf("Aguardando o job %d...\n", jobToWait->job_id);
+                    waitpid(jobToWait->pid, NULL, 0); // aguarda o término do processo
+                    printf("Job %d concluido.\n", jobToWait->job_id);
+                    removeJob(&jobList, jobToWait->job_id); // remove o job da lista
+                }
+                else
+                {
+                    printf("Job %d nao encontrado.\n", jobId);
+                }
             }
             else if (command && strcmp(command, "help") == 0)
             {
