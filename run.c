@@ -25,7 +25,7 @@ void run(Task *task)
         // filho
         printf("Executando task: %s\n", task->name);
         printf("id do filho: %d\n", getpid());
-        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
             printf("Erro ao executar o programa %s\n", task->program);
@@ -65,7 +65,7 @@ void runSequential(Task *head, const char *argv[])
         {
             // filho
             printf("Executando comando: %s\n", argv[i]);
-            int exe = execlp(task->program, task->args, NULL); // executa o programa
+            int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
             if (exe == -1)
             {
                 printf("Erro ao executar o comando %s\n", argv[i]);
@@ -106,7 +106,7 @@ void runParallel(Task *head, const char *argv[])
             {
                 // filho
                 printf("Executando comando: %s\n", argv[i]);
-                int exe = execlp(task->program, task->args, NULL); // executa o programa
+                int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
                 if (exe == -1)
                 {
                     printf("Erro ao executar o comando %s\n", argv[i]);
@@ -157,7 +157,7 @@ void redirectInput(Task *task, char *inputFile)
         printf("arquivo de entrada %s aberto com sucesso\n", inputFile);
         dup2(fileDescriptor, STDIN_FILENO);                // redireciona a entrada padrão para o arquivo
         close(fileDescriptor);                             // fecha o arquivo de entrada
-        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
             printf("Erro ao executar o programa %s\n", task->program);
@@ -207,7 +207,7 @@ void redirectOutput(Task *task, char *outputFile)
         printf("arquivo de entrada %s aberto com sucesso\n", outputFile);
         dup2(fileDescriptor, STDOUT_FILENO);               // redireciona a saída padrão para o arquivo
         close(fileDescriptor);                             // fecha o arquivo de entrada
-        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
             printf("Erro ao executar o programa %s\n", task->program);
@@ -257,7 +257,7 @@ void redirectAppend(Task *task, char *appendFile)
         printf("arquivo de entrada %s aberto com sucesso\n", appendFile);
         dup2(fileDescriptor, STDOUT_FILENO);               // redireciona a saída padrão para o arquivo
         close(fileDescriptor);                             // fecha o arquivo de entrada
-        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
             printf("Erro ao executar o programa %s\n", task->program);
@@ -298,7 +298,7 @@ void start(Task *task, Job **head, int *jobQnt)
         printf("Executando task: %s\n", task->name);
         fflush(stdout);
 
-        int exe = execlp(task->program, task->args, NULL); // executa o programa
+        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
 
         if (exe == -1)
         {
@@ -391,7 +391,7 @@ void runPipe(Task *head, const char *argv[])
             }
 
             fprintf(stderr, "Executando comando: %s\n", argv[i]);
-            int exe = execlp(task->program, task->args, NULL); // executa o programa
+            int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
             if (exe == -1)
             {
                 printf("Erro ao executar o comando %s\n", argv[i]);
