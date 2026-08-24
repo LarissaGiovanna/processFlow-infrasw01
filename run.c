@@ -84,27 +84,7 @@ void runSequential(Task *head, const char *argv[])
 
     for (int i = 0; argv[i] != NULL; i++) // percorrer todos os args
     {
-        Task *task = findTask(head, (char *)argv[i]); // procura a task na lista de tasks
-        pid_t pid = fork();                           // cria um novo processo
-
-        if (pid == 0)
-        {
-            // filho
-            int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
-            if (exe == -1)
-            {
-                fprintf(stderr, "Erro ao executar o comando %s\n", argv[i]);
-            }
-        }
-        else if (pid > 0)
-        {
-            // pai
-            wait(NULL); // esperando o fillho terminar
-        }
-        else
-        {
-            fprintf(stderr, "Erro ao executar o comando %s\n", argv[i]);
-        }
+        run(findTask(head, (char *)argv[i])); // procura a task na lista de tasks e executa
     }
 }
 void runParallel(Task *head, const char *argv[])
