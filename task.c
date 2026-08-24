@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include "task.h"
 
-Task *createTask(char *nameTask, char *program, char *args)
+Task *createTask(char *nameTask, char *program, char *args, char *redirectFile, int redirectType)
 { // ok
     Task *newTask = (Task *)malloc(sizeof(Task));
     if (newTask == NULL)
@@ -22,6 +22,15 @@ Task *createTask(char *nameTask, char *program, char *args)
     {
         newTask->args = strdup(args);
     }
+    if (redirectFile == NULL)
+    {
+        newTask->redirectFile = NULL;
+    }
+    else
+    {
+        newTask->redirectFile = strdup(redirectFile);
+    }
+    newTask->redirectType = redirectType;
     newTask->next = NULL;
     return newTask;
 }
@@ -56,7 +65,7 @@ void printTasks(Task *head)
     Task *atual = head;
     while (atual != NULL)
     {
-        fprintf(stderr, "Task Name: %s, Program: %s, Args: %s\n", atual->name, atual->program, atual->args);
+        fprintf(stderr, "Task Name: %s, Program: %s, Args: %s, Redirect File: %s, Redirect Type: %d\n", atual->name, atual->program, atual->args, atual->redirectFile, atual->redirectType);
         atual = atual->next;
     }
 }

@@ -39,7 +39,6 @@ int main(int argc, char const *argv[])
 
                 if (strcmp(line, "exit") == 0)
                 {
-                    fprintf(stderr, "Saindo do programa.\n");
                     break;
                 }
 
@@ -73,7 +72,7 @@ int main(int argc, char const *argv[])
                         char *args = data[3];    // pega os argumentos do programa
                         if (taskName != NULL && program != NULL)
                         {
-                            addTask(&head, createTask(taskName, program, args));
+                            addTask(&head, createTask(taskName, program, args, NULL, 0));
                         }
                         else
                         {
@@ -124,11 +123,7 @@ int main(int argc, char const *argv[])
                     else
                     {
                         Task *taskToRun = findTask(head, taskName);
-                        if (taskToRun != NULL)
-                        {
-                            run(taskToRun);
-                        }
-                        else
+                        if (taskToRun == NULL)
                         {
                             fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                         }
@@ -171,7 +166,8 @@ int main(int argc, char const *argv[])
                     Task *taskToRun = findTask(head, taskName);
                     if (taskToRun != NULL)
                     {
-                        redirectInput(taskToRun, inputFile);
+                        taskToRun->redirectFile = strdup(inputFile);
+                        taskToRun->redirectType = 1; // 1 = input
                     }
                     else
                     {
@@ -191,7 +187,8 @@ int main(int argc, char const *argv[])
                     Task *taskToRun = findTask(head, taskName);
                     if (taskToRun != NULL)
                     {
-                        redirectOutput(taskToRun, outputFile);
+                        taskToRun->redirectFile = strdup(outputFile);
+                        taskToRun->redirectType = 2; // 2 = output
                     }
                     else
                     {
@@ -211,7 +208,8 @@ int main(int argc, char const *argv[])
                     Task *taskToRun = findTask(head, taskName);
                     if (taskToRun != NULL)
                     {
-                        redirectAppend(taskToRun, appendFile);
+                        taskToRun->redirectFile = strdup(appendFile);
+                        taskToRun->redirectType = 3; // 3 = append
                     }
                     else
                     {
@@ -321,7 +319,7 @@ int main(int argc, char const *argv[])
                     char *args = data[3];    // pega os argumentos do programa
                     if (taskName != NULL && program != NULL)
                     {
-                        addTask(&head, createTask(taskName, program, args));
+                        addTask(&head, createTask(taskName, program, args, NULL, 0));
                         printTasks(head); // imprime a lista de tasks
                     }
                     else
@@ -373,11 +371,7 @@ int main(int argc, char const *argv[])
                 else
                 {
                     Task *taskToRun = findTask(head, taskName);
-                    if (taskToRun != NULL)
-                    {
-                        run(taskToRun);
-                    }
-                    else
+                    if (taskToRun == NULL)
                     {
                         fprintf(stderr, "Task %s nao encontrada.\n", taskName);
                     }
@@ -413,7 +407,8 @@ int main(int argc, char const *argv[])
                 Task *taskToRun = findTask(head, taskName);
                 if (taskToRun != NULL)
                 {
-                    redirectInput(taskToRun, inputFile);
+                    taskToRun->redirectFile = strdup(inputFile);
+                    taskToRun->redirectType = 1; // 1 = inputun);
                 }
                 else
                 {
@@ -433,7 +428,8 @@ int main(int argc, char const *argv[])
                 Task *taskToRun = findTask(head, taskName);
                 if (taskToRun != NULL)
                 {
-                    redirectOutput(taskToRun, outputFile);
+                    taskToRun->redirectFile = strdup(outputFile);
+                    taskToRun->redirectType = 2; // 2 = output
                 }
                 else
                 {
@@ -452,7 +448,8 @@ int main(int argc, char const *argv[])
                 Task *taskToRun = findTask(head, taskName);
                 if (taskToRun != NULL)
                 {
-                    redirectAppend(taskToRun, appendFile);
+                    taskToRun->redirectFile = strdup(appendFile);
+                    taskToRun->redirectType = 3; // 3 = append
                 }
                 else
                 {

@@ -23,6 +23,40 @@ void run(Task *task)
     if (pid == 0)
     {
         // filho
+        if (task->redirectFile != NULL)
+        {
+            int fileDescriptor;
+            if (task->redirectType == 1) // input
+            {
+                fileDescriptor = open(task->redirectFile, O_RDONLY);
+                if (fileDescriptor < 0)
+                {
+                    fprintf(stderr, "Erro ao abrir o arquivo de entrada %s\n", task->redirectFile);
+                    exit(1);
+                }
+                dup2(fileDescriptor, STDIN_FILENO);
+            }
+            else if (task->redirectType == 2) // output
+            {
+                fileDescriptor = open(task->redirectFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                if (fileDescriptor < 0)
+                {
+                    fprintf(stderr, "Erro ao abrir o arquivo de saida %s\n", task->redirectFile);
+                    exit(1);
+                }
+                dup2(fileDescriptor, STDOUT_FILENO);
+            }
+            else if (task->redirectType == 3) // append
+            {
+                fileDescriptor = open(task->redirectFile, O_WRONLY | O_CREAT | O_APPEND, 0644);
+                if (fileDescriptor < 0)
+                {
+                    fprintf(stderr, "Erro ao abrir o arquivo de saida %s\n", task->redirectFile);
+                    exit(1);
+                }
+                dup2(fileDescriptor, STDOUT_FILENO);
+            }
+        }
         int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
         if (exe == -1)
         {
@@ -110,124 +144,6 @@ void runParallel(Task *head, const char *argv[])
     else
     {
         fprintf(stderr, "Erro ao executar os comandos \n");
-    }
-}
-
-void redirectInput(Task *task, char *inputFile)
-{
-    if (task == NULL)
-    {
-        fprintf(stderr, "Task nao encontrada.\n");
-        return;
-    }
-
-    pid_t pid = fork(); // cria um novo processo
-
-    if (pid == 0)
-    {
-        // filho
-        inputFile[strcspn(inputFile, "\n")] = '\0';
-        int fileDescriptor = open(inputFile, O_RDONLY); // abre o arquivo de entrada
-        if (fileDescriptor < 0)
-        {
-            fprintf(stderr, "Erro ao abrir o arquivo de entrada\n");
-            exit(1);
-        }
-        dup2(fileDescriptor, STDIN_FILENO);                // redireciona a entrada padrão para o arquivo
-        close(fileDescriptor);                             // fecha o arquivo de entrada
-        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
-        if (exe == -1)
-        {
-            fprintf(stderr, "Erro ao executar o programa %s\n", task->program);
-            exit(1);
-        }
-    }
-    else if (pid > 0)
-    {
-        // pai
-        wait(NULL); // esperando o fillho terminar
-    }
-    else
-    {
-        fprintf(stderr, "Erro ao executar a task %s\n", task->name);
-    }
-}
-void redirectOutput(Task *task, char *outputFile)
-{
-    if (task == NULL)
-    {
-        fprintf(stderr, "Task nao encontrada.\n");
-        return;
-    }
-
-    pid_t pid = fork(); // cria um novo processo
-
-    if (pid == 0)
-    {
-        // filho
-        outputFile[strcspn(outputFile, "\n")] = '\0';
-        int fileDescriptor = open(outputFile, O_WRONLY | O_TRUNC | O_CREAT, 0644); // abre o arquivo de entrada
-        if (fileDescriptor < 0)
-        {
-            fprintf(stderr, "Erro ao abrir o arquivo de entrada\n");
-            exit(1);
-        }
-        dup2(fileDescriptor, STDOUT_FILENO);               // redireciona a saída padrão para o arquivo
-        close(fileDescriptor);                             // fecha o arquivo de entrada
-        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
-        if (exe == -1)
-        {
-            fprintf(stderr, "Erro ao executar o programa %s\n", task->program);
-            exit(1);
-        }
-    }
-    else if (pid > 0)
-    {
-        // pai
-        wait(NULL); // esperando o fillho terminar
-    }
-    else
-    {
-        fprintf(stderr, "Erro ao executar a task %s\n", task->name);
-    }
-}
-void redirectAppend(Task *task, char *appendFile)
-{
-    if (task == NULL)
-    {
-        fprintf(stderr, "Task nao encontrada.\n");
-        return;
-    }
-
-    pid_t pid = fork(); // cria um novo processo
-
-    if (pid == 0)
-    {
-        // filho
-        appendFile[strcspn(appendFile, "\n")] = '\0';
-        int fileDescriptor = open(appendFile, O_APPEND | O_WRONLY); // abre o arquivo de entrada
-        if (fileDescriptor < 0)
-        {
-            fprintf(stderr, "Erro ao abrir o arquivo de entrada\n");
-            exit(1);
-        }
-        dup2(fileDescriptor, STDOUT_FILENO);               // redireciona a saída padrão para o arquivo
-        close(fileDescriptor);                             // fecha o arquivo de entrada
-        int exe = execlp(task->program, task->program, task->args, NULL); // executa o programa
-        if (exe == -1)
-        {
-            fprintf(stderr, "Erro ao executar o programa %s\n", task->program);
-            exit(1);
-        }
-    }
-    else if (pid > 0)
-    {
-        // pai
-        wait(NULL); // esperando o fillho terminar
-    }
-    else
-    {
-        fprintf(stderr, "Erro ao executar a task %s\n", task->name);
     }
 }
 
